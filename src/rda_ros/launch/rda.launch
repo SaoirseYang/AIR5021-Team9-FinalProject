@@ -1,0 +1,25 @@
+<launch>
+  <!-- <include file="$(find spark_costmap_converter)/launch/spark_costmap_converter.launch" /> -->
+  <include file="$(find rda_ros)/launch/rda_obstacle.launch" />
+
+  <node pkg="rda_ros" type="rda_node.py" name="rda_planner" output="screen">
+    <!-- 加载 RDA 参数文件 -->
+    <param name="executable" value="python" />
+    <!-- <param name="path_truncate_distance" value="1.0" /> -->
+    <rosparam command="load" file="$(find rda_ros)/config/rda_params.yaml" />
+    <!-- <remap from="/rda_sub_path" to="/move_base/NavfnROS/plan" /> -->
+    <remap from="/rda_goal" to="/move_base_simple/goal" />
+    <remap from="/rda_obstacles" to="/move_base/local_costmap/obstacles" /> <!-- 障碍物信息 -->
+    <remap from="/rda_cmd_vel" to="/cmd_vel" />
+
+  </node>
+
+  <!-- <node pkg="rda_ros" type="rda_velocity_publisher_node.py" name="rda_velocity_publisher" output="screen"> -->
+    <!-- <remap from="/rda_cmd_vel" to="/cmd_vel" /> -->
+    <!-- <remap from="/rda_cmd_vel" to="/navigation_velocity_smoother/raw_cmd_vel" /> -->
+    <!-- <remap from="/rda_cmd_vel" to="/cmd_vel" /> -->
+    
+    <!-- <param name="pub_rate" value="50"/> -->
+  <!-- </node> -->
+
+</launch>

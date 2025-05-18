@@ -1,0 +1,25 @@
+<!--
+  机械臂与摄像头之间的校准功能。注意摄像头需要反着装，垂直向下。使用一个蓝色圆贴在吸盘的正上方当校准点。
+ -->
+<launch>
+  <arg name="color" default="red"/>
+  <!--UARM机械臂-->
+  <include file="$(find swiftpro)/launch/pro_control_nomoveit.launch"/>
+  
+  <!--Image filter node-->
+  <node pkg="spark_carry_object" type="image_filter_node.py" name="image_filter_node" output="screen">
+    <param name="input_topic" value="/camera/rgb/image_raw"/>
+    <param name="output_topic" value="/camera/rgb/image_filtered"/>
+    <param name="b_gain" value="1.2"/>
+    <param name="g_gain" value="0.85"/>
+    <param name="r_gain" value="0.95"/>
+    <param name="contrast" value="1.1"/>
+    <param name="brightness" value="5"/>
+  </node>
+  
+  <!--HSV获取-->
+  <node pkg="spark_carry_object" type="hsv_detection.py" name="spark_hsv_detection" output="screen">
+    <param name="color" value="$(arg color)"/>
+    <param name="image_topic" value="/camera/rgb/image_filtered"/>
+  </node>
+</launch>

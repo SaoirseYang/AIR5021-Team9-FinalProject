@@ -1,0 +1,21 @@
+<!-- 抓取物体并前进 -->
+<launch>
+    <!-- 摄像机类型 -->
+    <arg name="camera_type_tel" default="astrapro" doc="camera type [astrapro, astra, d435...]"/>
+    <arg name="lidar_type_tel" default="ydlidar" doc="lidar type [ydlidar, rplidar...]"/>
+    
+    <!-- 启动原有抓取功能 -->
+    <include file="$(find spark_carry_object)/launch/simple_carry_object.launch">
+        <arg name="camera_type_tel" value="$(arg camera_type_tel)"/>
+    </include>
+    
+    <!-- 启动完整的导航功能 -->
+    <include file="$(find spark_navigation)/launch/amcl_demo_lidar.launch">
+        <arg name="camera_type_tel" value="$(arg camera_type_tel)"/>
+        <arg name="lidar_type_tel" value="$(arg lidar_type_tel)"/>
+    </include>
+
+    
+    <!-- 启动我们的集成节点 -->
+    <node pkg="spark_carry_nav" type="carry_and_move.py" name="carry_and_move" output="screen"/>
+</launch>

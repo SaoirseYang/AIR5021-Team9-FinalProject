@@ -1,0 +1,35 @@
+<!-- NXROBO SPARK 简化版视觉抓取 -->
+<launch>
+    <!-- 摄像机类型 -->
+    <arg name="camera_type_tel" default="astrapro" doc="camera type [astrapro, astra, d435...]"/>
+    
+    <!-- 启动摄像头 -->
+    <include file="$(find astra_camera)/launch/astrapro.launch">
+       <!-- <arg name="camera_type_tel" value="$(arg camera_type_tel)"/> -->
+    </include>
+    
+    <!-- UARM机械臂 -->
+    <include file="$(find swiftpro)/launch/pro_control_nomoveit.launch"/>
+    
+    <!-- 图像过滤节点 (如果需要) -->
+    <node pkg="spark_carry_object" type="image_filter_node.py" name="image_filter_node" output="screen">
+        <remap from="/camera/rgb/image_raw" to="/camera/color/image_raw" if="$(eval arg('camera_type_tel')=='d435')"/>
+    </node>
+    
+    <!-- 搬运物体 -->
+    <node pkg="spark_carry_object" type="s_carry_object_cv3.py" name="spark_carry_object_node" output="screen">
+        <remap from="/camera/rgb/image_raw" to="/camera/rgb/image_filtered"/>
+        <param name="a_Pose" value="0,0,0,0,0,0,1"/>
+        <param name="b_Pose" value="0.5,0.5,0,0,0,0,1"/>
+        <param name="turnbody_min_z" value="-0.83"/>
+        <param name="turnbody_max_z" value="0.2"/>
+    </node>
+    
+    <!-- 在rviz显示 -->
+    <!--
+    <arg name="rvizconfig" default="$(find spark_carry_object)/rviz/carry_object_amcl_astrapro.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
+    -->
+    <!-- 是否开始抓取 -->
+    <node pkg="spark_carry_object" type="cmd_spark_carry_start.sh" name="cscs" />
+</launch>

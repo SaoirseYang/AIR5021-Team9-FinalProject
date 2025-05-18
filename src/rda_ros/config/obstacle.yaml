@@ -1,0 +1,6 @@
+
+scan_eps: 0.2
+scan_min_samples: 6
+target_frame: odom
+lidar_frame: laser_frame
+base_frame: base_link

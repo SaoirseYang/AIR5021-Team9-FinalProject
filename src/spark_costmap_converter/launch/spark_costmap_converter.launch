@@ -1,0 +1,29 @@
+<launch>
+
+  <!-- 启动独立的costmap转换节点 -->
+
+  <node name="standalone_converter" pkg="costmap_converter" type="standalone_converter" output="screen">
+
+    <!-- 指定转换插件 -->
+
+    <param name="converter_plugin" value="costmap_converter::CostmapToPolygonsDBSMCCH" />
+
+    <!-- 指定订阅的costmap话题 -->
+
+    <param name="costmap_topic" value="/move_base/local_costmap/costmap" />
+
+    <!-- 指定发布转换后的障碍物话题 -->
+
+    <param name="obstacles_topic" value="/move_base/local_costmap/obstacles" />
+
+    <!-- 指定里程计话题，用于动态障碍物跟踪 -->
+
+    <param name="odom_topic" value="/odom" />
+
+    <!-- 转换更新频率 -->
+
+    <param name="rate" value="5.0" />
+
+  </node>
+
+</launch>
